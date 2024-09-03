@@ -112,7 +112,7 @@ func VerifyAKSIngress(t *testing.T, ingressObj *v1.Ingress, expectedIngress pega
 
 // VerifyPegaIngress - Performs Pega Ingress assertions with the values as provided in default values.yaml
 func VerifyK8SIngress(t *testing.T, ingressObj *v1.Ingress, expectedIngress pegaIngress) {
-	require.Equal(t, "traefik", ingressObj.Annotations["kubernetes.io/ingress.class"])
+	require.Equal(t, "traefik", ingressObj.Spec.ingressClassName)
 	require.Equal(t, expectedIngress.Name, ingressObj.Spec.Rules[0].HTTP.Paths[0].Backend.Service.Name)
 	require.Equal(t, expectedIngress.Port, ingressObj.Spec.Rules[0].HTTP.Paths[0].Backend.Service.Port.Number)
 }
