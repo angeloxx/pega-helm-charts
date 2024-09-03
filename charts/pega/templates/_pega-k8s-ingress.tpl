@@ -8,13 +8,10 @@ metadata:
   annotations:
 {{- $ingress := .node.ingress }}
 {{- if $ingress.annotations }}
-    # Custom annotations
 {{ toYaml $ingress.annotations | indent 4 }}
-{{- else }}
-    # Ingress class used is 'traefik'
-    kubernetes.io/ingress.class: traefik
 {{- end }}
 spec:
+  ingressClassName: {{ default "traefik" $ingress.ingressClass }}
 {{ if ( include "ingressTlsEnabled" . ) }}
 {{- if $ingress.tls.secretName }}
 {{ include "tlssecretsnippet" . }}
