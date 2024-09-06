@@ -139,8 +139,6 @@ global:
       # the load balancer.
       nodeType: "WebUser"
 
-      ingressClassName: traefik
-
       # Pega requestor specific properties
       requestor:
         # Inactivity time after which requestor is passivated
@@ -206,6 +204,8 @@ global:
 
       ingress:
         enabled: true
+        ingressClassName: traefik
+
         # For help configuring the ingress block including TLS, see the Helm chart documentation
         # https://github.com/pegasystems/pega-helm-charts/blob/master/charts/pega/README.md#ingress
 
