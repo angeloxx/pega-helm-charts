@@ -11,7 +11,9 @@ metadata:
 {{ toYaml $ingress.annotations | indent 4 }}
 {{- end }}
 spec:
-  ingressClassName: {{ default "traefik" $ingress.ingressClass }}
+{{- if $ingress.ingressClassName }}
+  ingressClassName: {{ $ingress.ingressClassName }}
+{{ end }}
 {{ if ( include "ingressTlsEnabled" . ) }}
 {{- if $ingress.tls.secretName }}
 {{ include "tlssecretsnippet" . }}

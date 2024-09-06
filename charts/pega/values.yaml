@@ -139,6 +139,8 @@ global:
       # the load balancer.
       nodeType: "WebUser"
 
+      ingressClassName: traefik
+
       # Pega requestor specific properties
       requestor:
         # Inactivity time after which requestor is passivated
