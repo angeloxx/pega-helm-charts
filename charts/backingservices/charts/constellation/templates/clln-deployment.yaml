@@ -1,41 +1,35 @@
-{{- $depName := printf "%s" (include "deploymentName" (dict "root" .Values "defaultname" "constellation" )) }}
 {{- if .Values.enabled }}
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: {{ $depName }}
+  name: constellation
   labels:
-    app: {{ $depName }}
+    app: constellation
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: {{ $depName }}
+      app: constellation
   template:
     metadata:
       labels:
-        app: {{ $depName }}
+        app: constellation
     spec:
       {{- if .Values.customerAssetVolumeClaimName }}
       volumes:
-        - name: {{ $depName }}-appstatic-assets
+        - name: constellation-appstatic-assets
           persistentVolumeClaim:
             claimName: {{ .Values.customerAssetVolumeClaimName }}
       {{- end }}
       imagePullSecrets:
-      - name: {{ include "backingservicesRegistrySecret" ( dict "root" .Values "defaultname" "constellation" ) }}
-      {{ if .Values.docker.imagePullSecretNames }}
-      {{- range .Values.docker.imagePullSecretNames }}
-      - name: {{ . }}
-      {{- end }}
-      {{ else if .Values.imagePullSecretNames }}
+      - name: {{ template "pegaRegistrySecret" $ }}
+      {{ if .Values.imagePullSecretNames }}
       {{- range .Values.imagePullSecretNames }}
       - name: {{ . }}
       {{- end }}
       {{ end }}
       containers:
       - name: constellation
-        imagePullPolicy: {{ .Values.docker.constellation.imagePullPolicy }}
         image: {{ .Values.docker.constellation.image }}
         resources:
           {{ if .Values.resources }}
@@ -47,13 +41,13 @@ spec:
           {{- end }}
         {{ if .Values.customerAssetVolumeClaimName }}
         volumeMounts:
-         - name: {{ $depName }}-appstatic-assets
+         - name: constellation-appstatic-assets
            mountPath: /usr/src/app/dist/customers
         {{- end }}
         args:
-        - port={{ .Values.service.targetPort }}
+        - port=3000
         # constellation URL path, if you change it, you need to change ingress template files too
-        - urlPath={{ .Values.urlPath }}
+        - urlPath=/c11n
         - logLevel={{ .Values.logLevel }}
         livenessProbe:
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
@@ -62,8 +56,8 @@ spec:
           successThreshold: {{ .Values.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           httpGet:
-            path: {{ .Values.urlPath }}/buildInfo.json
-            port: {{ .Values.service.targetPort }}
+            path: /c11n/buildInfo.json
+            port: 3000
         readinessProbe:
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -71,9 +65,9 @@ spec:
           successThreshold: {{ .Values.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           httpGet:
-            path: {{ .Values.urlPath }}/buildInfo.json
-            port: {{ .Values.service.targetPort }}
+            path: /c11n/buildInfo.json
+            port: 3000
         ports:
-        - containerPort: {{ .Values.service.targetPort }}
+        - containerPort: 3000
 {{- include "podAffinity" .Values | indent 6 }}
 {{ end }}

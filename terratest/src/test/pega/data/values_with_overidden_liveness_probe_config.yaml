@@ -322,7 +322,6 @@ dds:
   username: "dnode_ext"
   password: "dnode_ext"
   clientEncryption: false
-  clientEncryptionStoreType: ""
   trustStore: ""
   trustStorePassword: ""
   keyStore: ""

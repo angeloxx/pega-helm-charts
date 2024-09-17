@@ -189,10 +189,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 {{- end }}
 
-{{- define "javaOpts" -}}
-{{- .Values.srsRuntime.javaOpts }}
-{{- end -}}
-
 {{/*
 Network policy: `openshift-dns` for openshift cluster, `kube-dns | core-dns` for other supported providers.
 */}}

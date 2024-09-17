@@ -214,10 +214,6 @@ spec:
         envFrom:
         - configMapRef:
             name: {{ template "pegaEnvironmentConfig" .root }}
-{{- if .node.containerSecurityContext }}
-        securityContext:
-{{ toYaml .node.containerSecurityContext | indent 10 }}
-{{-  end }}
         resources:
 {{- if .node.resources }}
 {{ toYaml .node.resources | indent 10 }}

@@ -2,12 +2,13 @@ package pega
 
 import (
 	"fmt"
-	"github.com/gruntwork-io/terratest/modules/helm"
-	"github.com/stretchr/testify/require"
-	v1 "k8s.io/api/networking/v1"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/gruntwork-io/terratest/modules/helm"
+	"github.com/stretchr/testify/require"
+	v1 "k8s.io/api/networking/v1"
 )
 
 func TestPegaTierIngress(t *testing.T) {
@@ -112,7 +113,7 @@ func VerifyAKSIngress(t *testing.T, ingressObj *v1.Ingress, expectedIngress pega
 
 // VerifyPegaIngress - Performs Pega Ingress assertions with the values as provided in default values.yaml
 func VerifyK8SIngress(t *testing.T, ingressObj *v1.Ingress, expectedIngress pegaIngress) {
-	require.Equal(t, "traefik", ingressObj.Annotations["kubernetes.io/ingress.class"])
+	require.Equal(t, "traefik", *ingressObj.Spec.IngressClassName)
 	require.Equal(t, expectedIngress.Name, ingressObj.Spec.Rules[0].HTTP.Paths[0].Backend.Service.Name)
 	require.Equal(t, expectedIngress.Port, ingressObj.Spec.Rules[0].HTTP.Paths[0].Backend.Service.Port.Number)
 }
