@@ -213,7 +213,9 @@ jobs:
       - name: build and upload, if DOCKER_TOKEN is configured
         if: env.IMAGE_REGISTRY_NAMESPACE != ''
         run: |
+          export CHART_VERSION=$(expr ${TAG_VERSION:1})
           helm push temp_gh_pages/pega-${CHART_VERSION}.tgz oci://registry-1.docker.io/${IMAGE_REGISTRY_NAMESPACE}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_SECRET }}
           IMAGE_REGISTRY_NAMESPACE: ${{ secrets.IMAGE_REGISTRY_NAMESPACE }}
+          TAG_VERSION: ${{ GITHUB_REF_NAME }}
