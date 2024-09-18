@@ -10,6 +10,9 @@ metadata:
 {{- if $ingress.annotations }}
 {{ toYaml $ingress.annotations | indent 4 }}
 {{- end }}
+{{- if $ingress.labels }}
+{{ toYaml $ingress.labels | indent 4 }}
+{{- end }}
 spec:
 {{- if $ingress.ingressClassName }}
   ingressClassName: {{ $ingress.ingressClassName }}
