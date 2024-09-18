@@ -203,24 +203,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_SECRET }}
 
 
-      # - name: Login to Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: env.IMAGE_REGISTRY_NAMESPACE != ''
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        env:
+          IMAGE_REGISTRY_NAMESPACE: ${{ secrets.IMAGE_REGISTRY_NAMESPACE }}
+
+
+      # - name: Login to Registry
       #   uses: docker/login-action@v3
       #   if: env.IMAGE_REGISTRY_NAMESPACE != ''
       #   with:
       #     registry: ghcr.io
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-
-      - name: Login to Registry
-        uses: docker/login-action@v3
-        if: env.IMAGE_REGISTRY_NAMESPACE != ''
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ github.token }}
-        env:
-          IMAGE_REGISTRY_NAMESPACE: ${{ secrets.IMAGE_REGISTRY_NAMESPACE }}
+      #     username: ${{ github.actor }}
+      #     password: ${{ github.token }}
+      #   env:
+      #     IMAGE_REGISTRY_NAMESPACE: ${{ secrets.IMAGE_REGISTRY_NAMESPACE }}
 
       - name: build and upload, if DOCKER_TOKEN is configured
         if: env.IMAGE_REGISTRY_NAMESPACE != ''
@@ -229,7 +230,7 @@ jobs:
           helm package --version ${CHART_VERSION} ./charts/pega/
           helm package --version ${CHART_VERSION} ./charts/addons/
           helm package --version ${CHART_VERSION} ./charts/backingservices/
-          helm push pega-${CHART_VERSION}.tgz oci://ghcr.io/${IMAGE_REGISTRY_NAMESPACE}
+          helm push pega-${CHART_VERSION}.tgz oci://registry-1.docker.io/${IMAGE_REGISTRY_NAMESPACE}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_SECRET }}
           IMAGE_REGISTRY_NAMESPACE: ${{ secrets.IMAGE_REGISTRY_NAMESPACE }}
