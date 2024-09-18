@@ -219,6 +219,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
+        env:
+          IMAGE_REGISTRY_NAMESPACE: ${{ secrets.IMAGE_REGISTRY_NAMESPACE }}
 
       - name: build and upload, if DOCKER_TOKEN is configured
         if: env.IMAGE_REGISTRY_NAMESPACE != ''
