@@ -230,7 +230,7 @@ jobs:
           helm package --version ${CHART_VERSION} ./charts/pega/
           helm package --version ${CHART_VERSION} ./charts/addons/
           helm package --version ${CHART_VERSION} ./charts/backingservices/
-          helm push pega-${CHART_VERSION}.tgz oci://registry-1.docker.io/${IMAGE_REGISTRY_NAMESPACE}
+          helm push pega-${CHART_VERSION}.tgz oci://registry-1.docker.io/${IMAGE_REGISTRY_NAMESPACE}/pega-helm-chart
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_SECRET }}
           IMAGE_REGISTRY_NAMESPACE: ${{ secrets.IMAGE_REGISTRY_NAMESPACE }}
